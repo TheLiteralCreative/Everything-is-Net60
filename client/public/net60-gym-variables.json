@@ -1,0 +1,157 @@
+{
+  "campaign": {
+    "name": "Everything is Net 60",
+    "premise": "Apply AR lending's 60-day payment delay to everyday transactions",
+    "tagline": "What if everything took 60 days?"
+  },
+  "scene_id": "NET60_GYM_01",
+  "characters": [
+    {
+      "char_id": "char-00",
+      "role": "primary",
+      "label": "Trainer",
+      "demographics": {
+        "age_range": "30s",
+        "build": "athletic",
+        "gender": "male",
+        "ethnicity": "diverse casting"
+      },
+      "appearance": {
+        "hair": "short, professional",
+        "face": "confident, approachable"
+      },
+      "wardrobe": {
+        "key_items": [
+          "blue gym staff polo",
+          "black athletic pants",
+          "white sneakers"
+        ],
+        "style": "professional gym staff",
+        "palette": "blue, black, white"
+      },
+      "personality": {
+        "archetype": "Procedurally confident authority figure",
+        "core_trait": "Matter-of-fact professionalism",
+        "voice_profile": "Calm, procedural, no irony"
+      }
+    },
+    {
+      "char_id": "char-01",
+      "role": "secondary",
+      "label": "Client",
+      "demographics": {
+        "age_range": "20s-30s",
+        "build": "average to athletic",
+        "gender": "any",
+        "ethnicity": "diverse casting"
+      },
+      "appearance": {
+        "hair": "casual, mid-workout",
+        "face": "confused, resigned"
+      },
+      "wardrobe": {
+        "key_items": [
+          "gray athletic t-shirt",
+          "black workout shorts",
+          "athletic shoes"
+        ],
+        "style": "casual gym attire",
+        "palette": "gray, black"
+      },
+      "personality": {
+        "archetype": "Powerless recipient",
+        "core_trait": "Confused resignation",
+        "voice_profile": "Non-verbal (reaction only)"
+      }
+    }
+  ],
+  "location": {
+    "loc_id": "loc-01a",
+    "label": "Corporate Gym Floor",
+    "environment_type": "interior",
+    "time_of_day": "mid-day",
+    "visual_specs": {
+      "architecture": "Modern corporate gym, open floor plan",
+      "color_palette": "cool grays, muted blues, fluorescent whites",
+      "texture_notes": "rubber flooring, metal equipment, painted walls"
+    },
+    "set_dressing": {
+      "foreground": "Weight racks, dumbbells, exercise mats",
+      "background": "Treadmills, windows with daylight, other gym equipment",
+      "props": [
+        "15-20 lb dumbbells (client holds)",
+        "clipboard (trainer carries)",
+        "gym equipment in background"
+      ]
+    }
+  },
+  "camera": {
+    "profile": "handheld",
+    "movement_style": "slight natural shake, documentary feel",
+    "lens": "35mm equivalent",
+    "focus_behavior": "shallow DOF on dialogue, medium DOF on reactions",
+    "default_framing": "medium to close-up"
+  },
+  "lighting": {
+    "profile": "natural",
+    "sources": "overhead cool fluorescent panels mixed with soft daylight from tall windows",
+    "color_temp": "cool",
+    "contrast": "medium",
+    "mood": "neutral gym environment, procedural"
+  },
+  "sound": {
+    "music_bed": "none",
+    "ambience": "diegetic gym sounds: light equipment clinks, distant treadmill whir, low chatter, occasional weight-stack click",
+    "sfx_library": [
+      "soft sneaker squeak on rubber floor",
+      "clipboard paper rustle",
+      "subtle dumbbell micro-tremble rattle",
+      "distant equipment sounds"
+    ]
+  },
+  "performance": {
+    "expression_presets": {
+      "procedural_calm": "neutral, professional, matter-of-fact",
+      "slight_apologetic": "subtle apologetic but firm",
+      "mid_workout_focus": "concentrated, mid-rep focus",
+      "confused_pause": "processing, uncertain",
+      "awkward_confusion": "visible confusion, slight discomfort",
+      "resigned_acceptance": "powerless, accepting absurdity"
+    },
+    "gesture_presets": {
+      "clipboard_check": "glances down at clipboard while walking",
+      "open_palm_gesture": "small explanatory hand movement, palm up",
+      "dumbbell_hold": "holding dumbbells at sides, static",
+      "frozen_hold": "awkward pause mid-rep, arms slightly trembling",
+      "awkward_dumbbell_hold": "dumbbells at sides, arms subtly shaking from hold"
+    },
+    "blocking_rules": [
+      "Trainer stays in foreground during dialogue delivery",
+      "Client visible in background during trainer's line (blurred)",
+      "Client becomes focus for reaction shots",
+      "Maintain spatial relationship: trainer approaches from left"
+    ]
+  },
+  "art": {
+    "key_props": [
+      {
+        "name": "Dumbbells",
+        "description": "15-20 lb dumbbells, black with gray handles",
+        "interaction_notes": "Client holds throughout, never sets down"
+      },
+      {
+        "name": "Clipboard",
+        "description": "Standard gym clipboard with papers",
+        "interaction_notes": "Trainer carries in left hand, glances at during approach"
+      }
+    ]
+  },
+  "post": {
+    "color_grade": "cool, mild desaturation, clean highlights, no glam",
+    "aspect_ratio": "16:9",
+    "fps": 24,
+    "resolution": "4K UHD",
+    "realism_notes": "documentary realism, handheld aesthetic, no impossible physics",
+    "text_policy": "text-free"
+  }
+}
