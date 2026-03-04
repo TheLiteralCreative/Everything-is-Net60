@@ -22,7 +22,7 @@ import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
 import {
   Copy, Check, Download, Zap, RefreshCw,
-  ChevronDown, ChevronUp, CheckCircle2, AlertCircle, Film, Megaphone,
+  ChevronDown, ChevronUp, CheckCircle2, AlertCircle, Film, Megaphone, Plus, X,
 } from "lucide-react";
 import {
   generateEpisode,
@@ -45,6 +45,50 @@ import {
 } from "@/lib/net60Engine";
 
 type AppMode = "single" | "batch";
+
+// ── Custom option lists (user-extensible) ─────────────────────
+const DEFAULT_VISUAL_STYLES: VisualStyle[] = [
+  "Locked tripod",
+  "Subtle handheld",
+  "Symmetrical frame",
+  "Close-up realism",
+  "Slow push-in",
+  "Slow pull-out",
+  "Overhead / bird's eye",
+  "Dutch angle",
+  "Rack focus",
+  "Tracking shot",
+];
+
+const DEFAULT_TONE_OPTIONS: ToneIntensity[] = [
+  "Deadpan neutral",
+  "Slightly ironic",
+  "Clinical",
+  "Corporate calm",
+  "Dry seriousness",
+  "Bureaucratic warmth",
+  "Cheerful indifference",
+  "Apologetically firm",
+  "Overly formal",
+  "Robotic sincerity",
+  "Passive aggressive",
+  "Sympathetic but unhelpful",
+];
+
+const DEFAULT_CTA_OPTIONS: CTAFocus[] = [
+  "Cash flow",
+  "Payroll",
+  "Working capital",
+  "Growth",
+  "Momentum",
+  "Operations",
+  "General AR",
+  "Invoice financing",
+  "Bridge funding",
+  "Supply chain",
+  "Vendor payments",
+  "Client retention",
+];
 
 export default function Home() {
   const [appMode, setAppMode] = useState<AppMode>("single");
@@ -74,6 +118,33 @@ export default function Home() {
   const [batchMaxRuntime, setBatchMaxRuntime] = useState(false);
   const [urgencyDist, setUrgencyDist] = useState({ low: 3, moderate: 3, high: 3, critical: 1 });
   const [batchClientName, setBatchClientName] = useState("");
+
+  // Custom option lists (user-extensible)
+  const [visualStyles, setVisualStyles] = useState<VisualStyle[]>(DEFAULT_VISUAL_STYLES);
+  const [toneOptions, setToneOptions] = useState<ToneIntensity[]>(DEFAULT_TONE_OPTIONS);
+  const [ctaOptions, setCtaOptions] = useState<CTAFocus[]>(DEFAULT_CTA_OPTIONS);
+
+  // Add-option dialog state
+  const [addDialogTarget, setAddDialogTarget] = useState<"visual" | "tone" | "cta" | null>(null);
+  const [addDialogValue, setAddDialogValue] = useState("");
+
+  const handleAddOption = () => {
+    const val = addDialogValue.trim();
+    if (!val) return;
+    if (addDialogTarget === "visual") {
+      if (!visualStyles.includes(val)) setVisualStyles(prev => [...prev, val]);
+      setVisualStyle(val);
+    } else if (addDialogTarget === "tone") {
+      if (!toneOptions.includes(val)) setToneOptions(prev => [...prev, val]);
+      setToneIntensity(val);
+    } else if (addDialogTarget === "cta") {
+      if (!ctaOptions.includes(val)) setCtaOptions(prev => [...prev, val]);
+      setCtaFocus(val);
+    }
+    setAddDialogTarget(null);
+    setAddDialogValue("");
+    toast.success(`Added "${val}" to options`);
+  };
 
   // Output state
   const [episodes, setEpisodes] = useState<GeneratedEpisode[]>([]);
@@ -347,43 +418,63 @@ export default function Home() {
 
                 {/* VISUAL STYLE */}
                 <ParamBlock label="VISUAL STYLE">
-                  <Select value={visualStyle} onValueChange={(v) => setVisualStyle(v as VisualStyle)}>
+                  <Select value={visualStyle} onValueChange={(v) => {
+                    if (v === "__add__") { setAddDialogTarget("visual"); setAddDialogValue(""); }
+                    else setVisualStyle(v as VisualStyle);
+                  }}>
                     <SelectTrigger className="bg-[#1a1a1a] border-[#333] text-[#e8e8e8] font-mono text-xs">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-[#1a1a1a] border-[#333] font-mono text-xs">
-                      <SelectItem value="Locked tripod">Locked tripod</SelectItem>
-                      <SelectItem value="Subtle handheld">Subtle handheld</SelectItem>
-                      <SelectItem value="Symmetrical frame">Symmetrical frame</SelectItem>
-                      <SelectItem value="Close-up realism">Close-up realism</SelectItem>
+                    <SelectContent className="bg-[#1a1a1a] border-[#333] font-mono text-xs max-h-64">
+                      {visualStyles.map((s) => (
+                        <SelectItem key={s} value={s}>{s}</SelectItem>
+                      ))}
+                      <div className="border-t border-[#2a2a2a] my-1" />
+                      <SelectItem value="__add__" className="text-[#f5a623]">
+                        <span className="flex items-center gap-1.5"><Plus size={10} /> Add custom style…</span>
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </ParamBlock>
 
                 {/* CTA FOCUS */}
                 <ParamBlock label="CTA FOCUS">
-                  <Select value={ctaFocus} onValueChange={(v) => setCtaFocus(v as CTAFocus)}>
+                  <Select value={ctaFocus} onValueChange={(v) => {
+                    if (v === "__add__") { setAddDialogTarget("cta"); setAddDialogValue(""); }
+                    else setCtaFocus(v as CTAFocus);
+                  }}>
                     <SelectTrigger className="bg-[#1a1a1a] border-[#333] text-[#e8e8e8] font-mono text-xs">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-[#1a1a1a] border-[#333] font-mono text-xs">
-                      {(["Cash flow", "Payroll", "Working capital", "Growth", "Momentum", "Operations", "General AR"] as CTAFocus[]).map((c) => (
+                    <SelectContent className="bg-[#1a1a1a] border-[#333] font-mono text-xs max-h-64">
+                      {ctaOptions.map((c) => (
                         <SelectItem key={c} value={c}>{c}</SelectItem>
                       ))}
+                      <div className="border-t border-[#2a2a2a] my-1" />
+                      <SelectItem value="__add__" className="text-[#f5a623]">
+                        <span className="flex items-center gap-1.5"><Plus size={10} /> Add custom focus…</span>
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </ParamBlock>
 
                 {/* TONE INTENSITY */}
                 <ParamBlock label="TONE INTENSITY">
-                  <Select value={toneIntensity} onValueChange={(v) => setToneIntensity(v as ToneIntensity)}>
+                  <Select value={toneIntensity} onValueChange={(v) => {
+                    if (v === "__add__") { setAddDialogTarget("tone"); setAddDialogValue(""); }
+                    else setToneIntensity(v as ToneIntensity);
+                  }}>
                     <SelectTrigger className="bg-[#1a1a1a] border-[#333] text-[#e8e8e8] font-mono text-xs">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-[#1a1a1a] border-[#333] font-mono text-xs">
-                      {(["Deadpan neutral", "Slightly ironic", "Clinical", "Corporate calm", "Dry seriousness"] as ToneIntensity[]).map((t) => (
+                    <SelectContent className="bg-[#1a1a1a] border-[#333] font-mono text-xs max-h-64">
+                      {toneOptions.map((t) => (
                         <SelectItem key={t} value={t}>{t}</SelectItem>
                       ))}
+                      <div className="border-t border-[#2a2a2a] my-1" />
+                      <SelectItem value="__add__" className="text-[#f5a623]">
+                        <span className="flex items-center gap-1.5"><Plus size={10} /> Add custom tone…</span>
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </ParamBlock>
@@ -611,6 +702,58 @@ export default function Home() {
             )}
           </div>
         </aside>
+
+        {/* ── ADD CUSTOM OPTION MODAL ─────────────────────────────────────── */}
+        {addDialogTarget && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70" onClick={() => setAddDialogTarget(null)}>
+            <div
+              className="bg-[#1a1a1a] border border-[#f5a623] p-6 w-96 space-y-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-bold tracking-widest uppercase text-[#f5a623]">
+                  ADD CUSTOM {addDialogTarget === "visual" ? "VISUAL STYLE" : addDialogTarget === "tone" ? "TONE" : "CTA FOCUS"}
+                </p>
+                <button onClick={() => setAddDialogTarget(null)} className="text-[#555] hover:text-[#e8e8e8] transition-colors">
+                  <X size={14} />
+                </button>
+              </div>
+              <input
+                autoFocus
+                type="text"
+                value={addDialogValue}
+                onChange={(e) => setAddDialogValue(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") handleAddOption(); if (e.key === "Escape") setAddDialogTarget(null); }}
+                placeholder={
+                  addDialogTarget === "visual" ? "e.g. Slow dolly push-in" :
+                  addDialogTarget === "tone" ? "e.g. Cheerful indifference" :
+                  "e.g. Invoice financing"
+                }
+                className="w-full bg-[#0f0f0f] border border-[#333] text-[#e8e8e8] font-mono text-xs px-3 py-2.5 placeholder:text-[#444] focus:outline-none focus:border-[#f5a623] transition-colors"
+              />
+              <p className="text-[10px] text-[#555] leading-relaxed">
+                {addDialogTarget === "visual" && "Describe the camera movement or framing style. This will be injected directly into the generated prompt."}
+                {addDialogTarget === "tone" && "Describe the delivery tone. This will be used to characterize how the authority figure delivers the Net 60 line."}
+                {addDialogTarget === "cta" && "Describe the CTA focus area. This will shape the tagline and voiceover in Prompt 2."}
+              </p>
+              <div className="flex gap-2 pt-1">
+                <button
+                  onClick={handleAddOption}
+                  disabled={!addDialogValue.trim()}
+                  className="flex-1 px-4 py-2 bg-[#f5a623] text-black text-xs font-bold tracking-widest uppercase hover:bg-[#f5a623]/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  ADD &amp; SELECT
+                </button>
+                <button
+                  onClick={() => setAddDialogTarget(null)}
+                  className="px-4 py-2 border border-[#333] text-xs text-[#666] hover:border-[#555] hover:text-[#999] transition-colors uppercase tracking-wider"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ── RIGHT MAIN: Output ───────────────────────────────────────────── */}
         <main className="flex-1 overflow-y-auto">

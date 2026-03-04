@@ -23,25 +23,9 @@ export type Domain =
   | "Service"
   | "Ceremony";
 export type UrgencyLevel = "Low" | "Moderate" | "High" | "Critical";
-export type VisualStyle =
-  | "Locked tripod"
-  | "Subtle handheld"
-  | "Symmetrical frame"
-  | "Close-up realism";
-export type CTAFocus =
-  | "Cash flow"
-  | "Payroll"
-  | "Working capital"
-  | "Growth"
-  | "Momentum"
-  | "Operations"
-  | "General AR";
-export type ToneIntensity =
-  | "Deadpan neutral"
-  | "Slightly ironic"
-  | "Clinical"
-  | "Corporate calm"
-  | "Dry seriousness";
+export type VisualStyle = string;
+export type CTAFocus = string;
+export type ToneIntensity = string;
 
 export interface NET60Token {
   scenario_id: string;
@@ -550,7 +534,7 @@ export const NET60_TOKENS: NET60Token[] = [
 // VISUAL STYLE → CAMERA LANGUAGE MAPPING
 // ============================================================
 
-const CAMERA_LANGUAGE: Record<VisualStyle | "Mixed but restrained", string> = {
+const CAMERA_LANGUAGE: Record<string, string> = {
   "Locked tripod": "Static locked frame. No camera movement. Symmetrical composition. Natural lighting.",
   "Subtle handheld": "Slight handheld movement. Documentary realism. Natural lighting. Shallow depth of field.",
   "Symmetrical frame": "Perfectly symmetrical composition. Locked tripod. Centered subject. Balanced negative space.",
@@ -562,7 +546,7 @@ const CAMERA_LANGUAGE: Record<VisualStyle | "Mixed but restrained", string> = {
 // TONE → DELIVERY LANGUAGE MAPPING
 // ============================================================
 
-const TONE_LANGUAGE: Record<ToneIntensity, string> = {
+const TONE_LANGUAGE: Record<string, string> = {
   "Deadpan neutral": "completely flat, emotionless delivery — as if reading from a policy document",
   "Slightly ironic": "calm but with the faintest trace of self-awareness — still procedural, never comedic",
   "Clinical": "precise, medical-grade neutrality — no warmth, no hesitation",
@@ -574,7 +558,7 @@ const TONE_LANGUAGE: Record<ToneIntensity, string> = {
 // CTA FOCUS → CTA LANGUAGE MODIFIER
 // ============================================================
 
-const CTA_MODIFIERS: Record<CTAFocus, string> = {
+const CTA_MODIFIERS: Record<string, string> = {
   "Cash flow": "cash flow and receivables",
   "Payroll": "payroll and team compensation",
   "Working capital": "working capital and liquidity",
@@ -600,9 +584,9 @@ export function generateEpisode(params: EpisodeParams, tokenOverride?: NET60Toke
   }
 
   const scenarioId = `${token.scenario_id}_${String(Math.floor(Math.random() * 900) + 100)}`;
-  const cameraLang = CAMERA_LANGUAGE[params.visual_style];
-  const toneLang = TONE_LANGUAGE[params.tone_intensity];
-  const ctaModifier = CTA_MODIFIERS[params.cta_focus];
+  const cameraLang = CAMERA_LANGUAGE[params.visual_style] ?? `${params.visual_style} camera approach. Natural lighting.`;
+  const toneLang = TONE_LANGUAGE[params.tone_intensity] ?? `${params.tone_intensity} delivery`;
+  const ctaModifier = CTA_MODIFIERS[params.cta_focus] ?? params.cta_focus;
   const clientName = params.client_subject_name?.trim() || null;
 
   // Build authority line — Delores or contextual
